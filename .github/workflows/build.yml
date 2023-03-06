@@ -170,6 +170,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
+          pre-emulator-launch-script: adb reverse tcp:8075 tcp:8075 && adb reverse tcp:8072 tcp:8072 && echo "Reversed ADB Ports"
           script: echo "Generated AVD snapshot for caching."
       - name: Set up Go
         uses: actions/setup-go@v3
@@ -226,7 +227,6 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          pre-emulator-launch-script: adb reverse tcp:8075 tcp:8075 && adb reverse tcp:8072 tcp:8072
           script: make integration-test-flutter integration-test-android
 
   GenerateVersion:
