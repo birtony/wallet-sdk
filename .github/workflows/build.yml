@@ -11,9 +11,9 @@ env:
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   SemanticPullRequest:
@@ -132,7 +132,7 @@ jobs:
       - name: Run iOS Simulator
         uses: futureware-tech/simulator-action@v2
         with:
-          model: 'iPhone 14'
+          model: "iPhone 14"
       - name: Remove AppIcon contents file (Simulator build fails with this file)
         run: |
           rm -rf demo/app/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
@@ -206,8 +206,8 @@ jobs:
           make prepare-integration-test-flutter
       - uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
       - name: Setup Flutter SDK
         uses: flutter-actions/setup-flutter@v2
         with:
@@ -226,11 +226,12 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: adb reverse tcp:8075 tcp:8075 && adb reverse tcp:8072 tcp:8072 && make integration-test-flutter integration-test-android
+          pre-emulator-launch-script: adb reverse tcp:8075 tcp:8075 && adb reverse tcp:8072 tcp:8072
+          script: make integration-test-flutter integration-test-android
 
   GenerateVersion:
     if: github.event_name == 'push' && (github.repository == 'trustbloc/wallet-sdk' && github.ref == 'refs/heads/main')
-    needs: [ Checks, UnitTest, SDKIntegrationTest]
+    needs: [Checks, UnitTest, SDKIntegrationTest]
     runs-on: ubuntu-22.04
     timeout-minutes: 10
     outputs:
@@ -254,9 +255,9 @@ jobs:
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: '${{ env.CURRENT_SEMVER }}'
+          current-version: "${{ env.CURRENT_SEMVER }}"
           # TODO: needs to be configurable https://github.com/christian-draeger/increment-semantic-version#input--output-examples
-          version-fragment: 'bug'
+          version-fragment: "bug"
       - id: store
         run: echo "version=${{ steps.bump_version.outputs.next-version }}" >> $GITHUB_OUTPUT
 
@@ -340,13 +341,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FRAMEWORK_NAME: walletsdk
-          NEW_VERSION: '${{ env.NEW_VERSION }}'
+          NEW_VERSION: "${{ env.NEW_VERSION }}"
       - name: Tag and Release new version Swift package
         uses: softprops/action-gh-release@v1
         with:
           draft: false
-          tag_name : ${{ env.NEW_VERSION }}
-          repository : trustbloc-cicd/wallet-sdk
+          tag_name: ${{ env.NEW_VERSION }}
+          repository: trustbloc-cicd/wallet-sdk
           files: |
             ios/walletsdk.xcframework.zip
         env:
@@ -402,4 +403,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USER: ${{ secrets.CR_USER }}
           TOKEN: ${{ secrets.CR_PAT }}
-          NEW_VERSION: '${{ env.NEW_VERSION }}'
+          NEW_VERSION: "${{ env.NEW_VERSION }}"
