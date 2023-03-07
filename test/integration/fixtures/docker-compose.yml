@@ -34,6 +34,10 @@ services:
       - VC_METRICS_PROVIDER_NAME=prometheus
       - VC_PROM_HTTP_URL=localhost:48127
       - VC_OAUTH_CLIENTS_FILE_PATH=/oauth-clients/clients.json
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     ports:
       - "8075:8075"
       - "48127:48127"
@@ -57,6 +61,10 @@ services:
       - PORT=8020
       - KMS_REGION=ca-central-1
       - KMS_ACCOUNT_ID=111122223333
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     ports:
       - 8020:8020
     entrypoint: "local-kms"
@@ -73,6 +81,10 @@ services:
       - DID_REST_TLS_SYSTEMCERTPOOL=true
       - DID_REST_TLS_CACERTS=/etc/tls/ec-cacert.pem
       - DID_REST_DID_DOMAIN=testnet.orb.local
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     ports:
       - ${DID_RESOLVER_PORT}:${DID_RESOLVER_PORT}
     command: start
@@ -85,6 +97,10 @@ services:
   mongodb.example.com:
     container_name: mongodb.example.com
     image: ${MONGODB_IMAGE}:${MONGODB_IMAGE_TAG}
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     ports:
       - ${MONGODB_PORT}:${MONGODB_PORT}
     networks:
@@ -114,6 +130,10 @@ services:
       - ORB_TLS_KEY=/etc/keys/tls/ec-key.pem
       - ORB_TLS_CACERTS=/etc/keys/tls/ec-cacert.pem
       - ORB_TLS_SYSTEMCERTPOOL=true
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     ports:
       - 443:443
     command: start
@@ -130,6 +150,10 @@ services:
       - FOLDER=/data
       - TLS_CERT=/etc/tls/ec-pubCert.pem
       - TLS_KEY=/etc/tls/ec-key.pem
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     ports:
       - "10096:10096"
     volumes:
@@ -160,6 +184,10 @@ services:
       - SERVE_ADMIN_PORT=4445
       - LOG_LEAK_SENSITIVE_VALUES=true
       - LOG_LEVEL=debug
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
     restart: unless-stopped
     volumes:
       - ./keys/tls:/etc/tls
