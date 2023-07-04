@@ -40,6 +40,7 @@ public class OpenID4VP {
         let opts = Openid4vpNewOpts()
         opts!.setActivityLogger(activityLogger)
         opts!.add(trace!.traceHeader())
+        opts?.disableHTTPClientTLSVerify()
         
         let interaction = Openid4vpNewInteraction(args, opts, nil)
         

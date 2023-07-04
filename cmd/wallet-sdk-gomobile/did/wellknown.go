@@ -34,7 +34,7 @@ func ValidateLinkedDomains(did string, resolver api.DIDResolver,
 		opts = NewValidateLinkedDomainsOpts()
 	}
 
-	httpClient := wrapper.NewHTTPClient(opts.httpTimeout, api.Headers{}, false)
+	httpClient := wrapper.NewHTTPClient(opts.httpTimeout, api.Headers{}, true)
 
 	return validateLinkedDomains(did, resolver, httpClient)
 }

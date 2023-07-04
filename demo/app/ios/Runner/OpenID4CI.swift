@@ -27,6 +27,7 @@ public class OpenID4CI {
         let opts = Openid4ciNewInteractionOpts()
         opts!.setActivityLogger(activityLogger)
         opts!.add(trace!.traceHeader())
+        opts!.disableHTTPClientTLSVerify()
         
         self.initiatedInteraction = Openid4ciNewIssuerInitiatedInteraction(args, opts, nil)!
     }
