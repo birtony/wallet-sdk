@@ -9,13 +9,15 @@ let openID4CIInteraction;
 let openID4VPInteraction;
 let createdDID;
 
-async function jsInitSDK(didResolverURI) {
+import Agent from "@trustbloc-cicd/wallet-sdk-js"
+
+window.jsInitSDK = async function jsInitSDK(didResolverURI) {
     const kmsDatabase = await CreateDB("test")
     agent = new Agent.default({assetsPath: "", didResolverURI:didResolverURI, kmsDatabase: kmsDatabase});
     await agent.initialize();
 }
 
-async function jsCreateDID(didMethod, keyType) {
+window.jsCreateDID =  async function jsCreateDID(didMethod, keyType) {
     const did = await agent.createDID({
         didMethod: didMethod,
         keyType: keyType
@@ -29,7 +31,7 @@ async function jsCreateDID(didMethod, keyType) {
     }
 }
 
-async function jsCreateOpenID4CIInteraction(initiateIssuanceURI) {
+window.jsCreateOpenID4CIInteraction =  async function jsCreateOpenID4CIInteraction(initiateIssuanceURI) {
     openID4CIInteraction = await agent.createOpenID4CIIssuerInitiatedInteraction({
         initiateIssuanceURI: initiateIssuanceURI
     })
@@ -41,7 +43,7 @@ async function jsCreateOpenID4CIInteraction(initiateIssuanceURI) {
     };
 }
 
-async function jsRequestCredentialWithPreAuth(userPinEntered) {
+window.jsRequestCredentialWithPreAuth =  async function jsRequestCredentialWithPreAuth(userPinEntered) {
     var creds = await openID4CIInteraction.requestCredentialWithPreAuth({
         pin: userPinEntered,
         didDoc: createdDID
@@ -50,11 +52,11 @@ async function jsRequestCredentialWithPreAuth(userPinEntered) {
     return creds[0];
 }
 
-function jsIssuerURI() {
+window.jsIssuerURI =  function jsIssuerURI() {
     return openID4CIInteraction.issuerURI()
 }
 
-async function jsResolveDisplayData(issuerURI, credentials) {
+window.jsResolveDisplayData =  async function jsResolveDisplayData(issuerURI, credentials) {
     let data = await agent.resolveDisplayData({
         issuerURI: issuerURI,
         credentials:credentials
@@ -63,13 +65,13 @@ async function jsResolveDisplayData(issuerURI, credentials) {
     return data;
 }
 
-async function jsGetCredentialID(credential) {
+window.jsGetCredentialID =  async function jsGetCredentialID(credential) {
     return await agent.getCredentialID({
         credential: credential
     });
 }
 
-async function jsParseResolvedDisplayData(resolvedCredentialDisplayData) {
+window.jsParseResolvedDisplayData =  async function jsParseResolvedDisplayData(resolvedCredentialDisplayData) {
     return await agent.parseResolvedDisplayData({
         resolvedCredentialDisplayData: resolvedCredentialDisplayData
     });
