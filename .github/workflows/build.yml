@@ -505,6 +505,22 @@ jobs:
           echo "NEW_VERSION=$NEW_VER" >> $GITHUB_ENV
           echo $NEW_VER
 
+      - name: Set npm authentication tokens
+        run: |
+          echo $PATH
+          echo ${{ github.workspace }}
+          echo '//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}' > ~/.npmrc
+          echo '@trustbloc-cicd:registry=https://npm.pkg.github.com' >> ~/.npmrc
+
+      - name: Setup Flutter
+        run: |
+          git clone https://github.com/flutter/flutter.git --depth 1
+          echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies and build flutter demo app web
+        run: |
+          make build-demo-app-web
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
