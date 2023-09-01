@@ -102,15 +102,46 @@ extension JSSubmissionRequirementExt on JSSubmissionRequirement {
 
 @JS()
 @staticInterop
+class JSLogo {}
+
+extension JSLogoExt on JSLogo {
+  external String get alt_text;
+  external String get url;
+}
+
+@JS()
+@staticInterop
+class JSSupportedCredentialDisplayData {}
+
+extension JSSupportedCredentialDisplayDataExt on JSSupportedCredentialDisplayData {
+  external String get name;
+  external String get locale;
+  external List<dynamic> get logo;
+  external String get text_color;
+  external String get background_color;
+}
+
+@JS()
+@staticInterop
 class JSSupportedCredentials {}
 
 extension JSSupportedCredentialsExt on JSSupportedCredentials {
-
   external String get format;
-
   external List<dynamic> get types;
-
   external List<dynamic> get display;
+}
+
+@JS()
+@staticInterop
+class JSIssuerDisplayData {}
+
+extension JSIssuerDisplayDataExt on JSIssuerDisplayData {
+  external String get name;
+  external String get locale;
+  external String get url;
+  external List<dynamic> get logo;
+  external String get text_color;
+  external String get background_color;
 }
 
 @JS()
@@ -323,6 +354,9 @@ class WalletSDK extends WalletPlatform {
   Future<List<IssuerMetaData>> getIssuerMetaData() async {
     final JSIssuerMetadata data = await promiseToFuture(jsGetIssuerMetadata());
 
+    debugPrint("data: ${data.supportedCredentials.first}");
+    debugPrint("data: ${data.localizedIssuerDisplays.first}");
+
     final List<IssuerMetaData> issuerMetadata = [IssuerMetaData(
       credentialIssuer: data.credentialIssuer,
       supportedCredentials: data.supportedCredentials
@@ -331,21 +365,27 @@ class WalletSDK extends WalletPlatform {
           format: supportedCredential.format,
           types: supportedCredential.types.map((e) => e as String).toList(),
           display: supportedCredential.display
+              .map((e) => e as JSSupportedCredentialDisplayData)
                 .map((supportedCredentialDisplayData) => SupportedCredentialDisplayData(
                   name: supportedCredentialDisplayData.name,
                   locale: supportedCredentialDisplayData.locale,
-                  logo: (supportedCredentialDisplayData.logo != null) ? supportedCredentialDisplayData.logo.url : '',
+                  logo: supportedCredentialDisplayData.logo.first
+                      .map((e) => e as JSLogo)
+                      .map((logo) => logo.url),
                   textColor: supportedCredentialDisplayData.text_color,
                   backgroundColor: supportedCredentialDisplayData.background_color
               )
             ).toList(),
         )).toList(),
       localizedIssuerDisplays: data.localizedIssuerDisplays
+          .map((e) => e as JSIssuerDisplayData)
           .map((localizedIssuerDisplay) => IssuerDisplayData(
             name: localizedIssuerDisplay.name,
             locale: localizedIssuerDisplay.locale,
-            url: (localizedIssuerDisplay.url != null) ? localizedIssuerDisplay.url : '',
-            logo: (localizedIssuerDisplay.logo != null) ? localizedIssuerDisplay.logo.url : '',
+            url: localizedIssuerDisplay.url,
+            logo: localizedIssuerDisplay.logo.first
+                .map((e) => e as JSLogo)
+                .map((logo) => logo.url),
             textColor: localizedIssuerDisplay.text_color,
             backgroundColor: localizedIssuerDisplay.background_color
         )).toList(),

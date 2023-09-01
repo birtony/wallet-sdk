@@ -32,7 +32,7 @@ WORKDIR /usr/local/bin/app
 RUN flutter pub get
 
 # Build the app for the web
-RUN flutter build web
+RUN flutter build web --profile --dart2js-optimization=O0
 
 # Create the run-time image
 FROM nginx:stable-alpine3.17-slim

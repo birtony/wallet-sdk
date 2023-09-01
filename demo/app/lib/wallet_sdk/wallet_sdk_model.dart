@@ -198,10 +198,36 @@ class SupportedCredentials {
   }
 }
 
+class Logo {
+  final String alt_text;
+  final String url;
+
+  const Logo({
+    required this.alt_text,
+    required this.url
+  });
+
+  @override
+  String toString() {
+    return 'Logo{ alt_text: $alt_text, url: $url }';
+  }
+
+  Map<String, dynamic> toMap() {
+    return {'alt_text': alt_text, 'url': url};
+  }
+
+  factory Logo.fromMap(Map<String, dynamic> map) {
+    return Logo(
+      alt_text: map['alt_text'] as String,
+      url: map['url'] as String,
+    );
+  }
+}
+
 class SupportedCredentialDisplayData {
   final String name;
   final String locale;
-  final String logo;
+  final List<dynamic> logo;
   final String textColor;
   final String backgroundColor;
 
@@ -226,7 +252,9 @@ class SupportedCredentialDisplayData {
     return SupportedCredentialDisplayData(
       name: map['name'] as String,
       locale: map['locale'] as String,
-      logo: map['logo'] as String,
+      logo: (map['logo'] as List<dynamic>)
+          .map((obj) => Logo.fromMap(obj.cast<String, dynamic>()))
+          .toList(),
       textColor: map['textColor'] as String,
       backgroundColor: map['backgroundColor'] as String,
     );
@@ -237,7 +265,7 @@ class IssuerDisplayData {
   final String name;
   final String locale;
   final String url;
-  String? logo;
+  List<dynamic>? logo;
   String? backgroundColor;
   String? textColor;
 
@@ -271,7 +299,9 @@ class IssuerDisplayData {
         name: map['name'] as String,
         locale: map['locale'] as String,
         url: map['url'] as String,
-        logo: map['logo'] as String?,
+        logo: (map['logo'] as List<dynamic>)
+            .map((obj) => Logo.fromMap(obj.cast<String, dynamic>()))
+            .toList(),
         textColor: map['textColor'] as String,
         backgroundColor: map['backgroundColor'] as String);
   }

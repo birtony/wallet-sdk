@@ -79,10 +79,10 @@ class SupportedCredentialsListState extends State<SupportedCredentialsList> {
                       ),
                       textAlign: TextAlign.start,
                     ),
-                    leading: widget.supportedCredentialList.elementAt(index).display.first.logo == null
+                    leading: widget.supportedCredentialList.elementAt(index).display.first.logo.first.url == null
                         ? const SizedBox.shrink()
                         : CachedNetworkImage(
-                            imageUrl: widget.supportedCredentialList.elementAt(index).display.first.logo,
+                            imageUrl: widget.supportedCredentialList.elementAt(index).display.first.logo.first.url,
                             placeholder: (context, url) => const CircularProgressIndicator(),
                             errorWidget: (context, url, error) =>
                                 Image.asset('lib/assets/images/genericCredential.png', fit: BoxFit.contain),
